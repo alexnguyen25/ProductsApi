@@ -42,4 +42,39 @@ public class ProductsController : ControllerBase{
         return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
     }
 
+    [HttpPut("{id}")] // Update
+    public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] Product updatedProduct) {
+        if (id != updatedProduct.Id){
+        return BadRequest("Product ID mismatch");
+        }
+
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            return NotFound($"Product with Id = {id} not found");
+        }
+
+        product.Name = updatedProduct.Name;
+        product.Price = updatedProduct.Price;
+        product.CategoryId = updatedProduct.CategoryId;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+    
+    [HttpDelete("{id}")] // Delete
+    public async Task<IActionResult> DeleteProduct([FromRoute] int id) {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null || product.IsDeleted == true) {
+            return NotFound();
+        }
+
+        product.IsDeleted = true;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+
 }

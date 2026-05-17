@@ -9,7 +9,10 @@ builder.Services.AddOpenApi();
 
 var sqliteConnection = SqliteConnectionResolver.Resolve(
     builder.Configuration.GetConnectionString("DefaultConnection"),
-    builder.Environment.ContentRootPath);
+    builder.Environment.ContentRootPath
+);
+
+builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(sqliteConnection));
@@ -21,6 +24,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.MapControllers();
+
 
 app.UseHttpsRedirection();
 

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ProductsApi.Models;
 
 public class Product {
@@ -7,6 +9,7 @@ public class Product {
     public int CategoryId { get; set; }
     public bool IsDeleted { get; set; }
 
+    [JsonIgnore]
     public Category? Category { get; set; }
 
 }

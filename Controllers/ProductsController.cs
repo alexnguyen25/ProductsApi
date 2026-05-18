@@ -15,8 +15,11 @@ public class ProductsController : ControllerBase{
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllProducts() {
-        List<Product> productList = await _context.Products.Where(p => p.IsDeleted == false).ToListAsync();
+    public async Task<IActionResult> GetAllProducts([FromQuery] int pageNumber=1, [FromQuery] int pageSize=20) {
+        List<Product> productList = await _context.Products.Where(p => p.IsDeleted == false)
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
 
         return Ok(productList);
 

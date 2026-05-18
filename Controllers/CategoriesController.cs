@@ -15,8 +15,12 @@ public class CategoriesController : ControllerBase{
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories() {
-        List<Category> categoriesList = await _context.Categories.Where(c => c.IsDeleted == false).Include(c => c.Products.Where(p => !p.IsDeleted)).ToListAsync();
+    public async Task<IActionResult> GetAllCategories([FromQuery] int pageNumber=1, [FromQuery] int pageSize=20) {
+        List<Category> categoriesList = await _context.Categories.Where(c => c.IsDeleted == false)
+        .Include(c => c.Products.Where(p => !p.IsDeleted))
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
 
         return Ok(categoriesList);
 
